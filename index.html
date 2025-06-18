@@ -1,52 +1,122 @@
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    background: #e6ccf2; /* fundo roxo pastel */
-    color: #333;
-  }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extrator de Palavras-chave</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 40px;
+      background: #e6ccf2; /* roxo pastel elegante */
+      color: #2e003e;
+    }
 
-  textarea {
-    width: 100%;
-    height: 200px;
-    padding: 10px;
-    font-size: 16px;
-    resize: vertical;
-    border: 1px solid #bfa8d2;
-    background: #f7ebfc; /* lilás bem clarinho */
-    color: #333;
-  }
+    h1 {
+      text-align: center;
+      color: #4b116f;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
 
-  button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    font-size: 16px;
-    background-color: #d1a3ff; /* roxo claro */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 12px;
+      font-size: 16px;
+      resize: vertical;
+      border: 2px solid #c59be2;
+      border-radius: 8px;
+      background: #f5e6fc;
+      color: #2e003e;
+      box-shadow: 2px 2px 8px rgba(100, 0, 150, 0.1);
+    }
 
-  button:hover {
-    background-color: #bf94e4;
-  }
+    button {
+      padding: 12px 24px;
+      margin-top: 15px;
+      font-size: 16px;
+      background-color: #a566c6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(100, 0, 150, 0.2);
+      transition: background-color 0.3s ease;
+    }
 
-  .resultado {
-    margin-top: 20px;
-    padding: 10px;
-    background: #f7ebfc; /* lilás claro */
-    border: 1px solid #bfa8d2;
-    border-radius: 5px;
-  }
+    button:hover {
+      background-color: #934eb3;
+    }
 
-  .palavra {
-    display: inline-block;
-    background: #d8c1f2; /* tom pastel lilás */
-    margin: 4px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    color: #4b2e63;
-    font-weight: bold;
-  }
-</style>
+    .resultado {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f5e6fc;
+      border: 1px solid #c59be2;
+      border-radius: 8px;
+      box-shadow: 2px 2px 10px rgba(100, 0, 150, 0.1);
+    }
+
+    .resultado h3 {
+      margin-bottom: 10px;
+      color: #4b116f;
+    }
+
+    .palavra {
+      display: inline-block;
+      background: #d6b3f2;
+      margin: 6px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      color: #2e003e;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 1px 1px 5px rgba(120, 0, 160, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Extrator de Palavras-chave</h1>
+  <textarea id="texto" placeholder="Cole seu texto aqui..."></textarea>
+  <br />
+  <button onclick="extrairPalavrasChave()">Extrair</button>
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const stopwords = [
+      'de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'com', 'não', 'uma', 'os', 'no', 'se', 'na',
+      'por', 'mais', 'as', 'dos', 'como', 'mas', 'foi', 'ao', 'ele', 'das', 'tem', 'isso', 'são', 'sua', 'ou', 'ser',
+      'quando', 'muito', 'há', 'nos', 'já', 'está', 'eu', 'também', 'só', 'pelo', 'pela', 'até', 'seu',
+      'me', 'te', 'nos', 'lhe', 'eles', 'elas', 'meu', 'minha', 'teu', 'tua', 'nosso', 'nossa', 'deles', 'delas'
+    ];
+
+    function extrairPalavrasChave() {
+      const texto = document.getElementById('texto').value.toLowerCase();
+      const palavras = texto.match(/\b[\wáéíóúãõç]+\b/g);
+      const contagem = {};
+
+      palavras?.forEach(palavra => {
+        if (!stopwords.includes(palavra) && palavra.length > 2) {
+          contagem[palavra] = (contagem[palavra] || 0) + 1;
+        }
+      });
+
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = '<h3>Palavras-chave encontradas:</h3>';
+
+      const palavrasOrdenadas = Object.entries(contagem)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20);
+
+      palavrasOrdenadas.forEach(([palavra, freq]) => {
+        const span = document.createElement('span');
+        span.className = 'palavra';
+        span.textContent = `${palavra} (${freq})`;
+        resultadoDiv.appendChild(span);
+      });
+    }
+  </script>
+</body>
+</html>
+
